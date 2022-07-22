@@ -14,7 +14,7 @@ class TestDropApp(App):
     def _on_drop_file(self, window, file_path, x, y):
         # try:
         output = unlockPdf(file_path)
-        os.startfile(output)
+        os.startfile(output): str
         # except Exception as e:
         #     print(e)
 
