@@ -16,13 +16,15 @@ from kivy.event import EventDispatcher
 from kivy.properties import StringProperty
 from flattenPdf import unlockPdf
 from functools import partial
+import sys
+from kivy.resources import resource_add_path, resource_find
 
 Config.set('graphics', 'width', '300')
 Config.set('graphics', 'height', '300')
 
-locked_padlock = 'assets\\locked-padlock.png'
-unlocked_padlock = 'assets\\unlocked-padlock.png'
-spinner = 'assets\\spinner.gif'
+locked_padlock = 'locked-padlock.png'
+unlocked_padlock = 'unlocked-padlock.png'
+spinner = 'spinner.gif'
 
 
 class OutputPath(EventDispatcher):
@@ -92,5 +94,9 @@ class PdfUnlockApp(App):
 
 
 if __name__ == "__main__":
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS, 'assets'))
+        print(sys._MEIPASS)
+    resource_add_path('./assets')
     app = PdfUnlockApp()
     app.run()
