@@ -43,7 +43,7 @@ class RootWidget(FloatLayout):
             0.25, 0.25), pos_hint={'center_x': 0.5, 'center_y': 0.55})
         self.add_widget(self.padlock)
         self.text = Label(text="Drop PDF here to unlock.", size_hint_y=None, text_size=(
-            self.width * 5, None), pos_hint={'center_x': 0.5, 'center_y': 0.35}, color=(0, 0, 0, 1), halign="center")
+            self.width * 3, None), pos_hint={'center_x': 0.5, 'center_y': 0.35}, color=(0, 0, 0, 1), halign="center")
         self.text.height = self.text.texture_size[1]
         self.add_widget(self.text)
         self.button = Button(text="Open", size_hint=(0.25, 0.1), pos_hint={
@@ -59,6 +59,10 @@ class RootWidget(FloatLayout):
         self.padlock.size_hint = (1, 1)
         self.target_file_path = file_path
         self.text.text = ""
+        try:
+            self.remove_widget(self.button)
+        except:
+            pass
         output = OutputPath()
         output.value = ""
         output.bind(value=self.unlock_finished)
