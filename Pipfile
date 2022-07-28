@@ -1,5 +1,6 @@
 [scripts]
 build = "pyinstaller 'PDF Unlocker.spec'"
+dev = "py -m main"
 
 [packages]
 altgraph = "==0.17.2"
