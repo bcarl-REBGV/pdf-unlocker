@@ -103,7 +103,6 @@ if __name__ == "__main__":
     # checks if running as an executable app and loads assets from pyinstaller's temp folder
     if hasattr(sys, '_MEIPASS'):
         resource_add_path(os.path.join(sys._MEIPASS, 'assets'))
-        print(sys._MEIPASS)
     resource_add_path('./assets')
     app = PdfUnlockApp()
     app.run()
