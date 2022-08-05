@@ -68,10 +68,10 @@ class RootWidget(FloatLayout):
         output = OutputPath()
         output.value = ""
         output.bind(value=self.unlock_finished)
-        thread = Thread(target=self.dispatch_unlock, args=(file_path, output))
+        # call to unlockPdf is done in a separate thread to prevent the GUI from freezing
+        thread = Thread(target=self.dispatch_unlock, args=(file_path, output)) 
         thread.start()
 
-    # call to unlockPdf is done in a separate thread to prevent the GUI from freezing
     def dispatch_unlock(self, file_path, output):
         output.value = unlockPdf(file_path)
         self.output_file_path = output.value
@@ -100,6 +100,7 @@ class PdfUnlockApp(App):
 
 
 if __name__ == "__main__":
+    # checks if running as an executable app and loads assets from pyinstaller's temp folder
     if hasattr(sys, '_MEIPASS'):
         resource_add_path(os.path.join(sys._MEIPASS, 'assets'))
         print(sys._MEIPASS)
