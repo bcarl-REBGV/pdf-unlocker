@@ -43,17 +43,19 @@ class RootWidget(FloatLayout):
             0.25, 0.25), pos_hint={'center_x': 0.5, 'center_y': 0.55})
         self.add_widget(self.padlock)
         self.text = Label(text="Drop PDF here to unlock.", size_hint_y=None, text_size=(
-            self.width * 3, None), pos_hint={'center_x': 0.5, 'center_y': 0.35}, color=(0, 0, 0, 1), halign="center")
+            self.width * 3, None), pos_hint={'center_x': 0.5, 'center_y': 0.3}, color=(0, 0, 0, 1), halign="center")
         self.text.height = self.text.texture_size[1]
         self.add_widget(self.text)
         self.button = Button(text="Open", size_hint=(0.25, 0.1), pos_hint={
-                             'center_x': 0.5, 'center_y': 0.15})
+                             'center_x': 0.5, 'center_y': 0.15 - self.text.height})
         self.button.bind(on_press=self.open_file)
 
+    # callback which is called whenever the window is resized.
     def update_size(self, instance, value):
         self.rect.pos = self.pos
         self.rect.size = self.size
 
+    # called when files are dropped onto the window
     def _on_drop_file(self, window, file_path, x, y):
         self.padlock.source = spinner
         self.padlock.size_hint = (1, 1)
@@ -69,25 +71,25 @@ class RootWidget(FloatLayout):
         thread = Thread(target=self.dispatch_unlock, args=(file_path, output))
         thread.start()
 
+    # call to unlockPdf is done in a separate thread to prevent the GUI from freezing
     def dispatch_unlock(self, file_path, output):
         output.value = unlockPdf(file_path)
         self.output_file_path = output.value
 
+    # called when the OutputPath defined in a previous function changes.
     def unlock_finished(self, instance, value):
         Clock.schedule_once(partial(self.unlock_update, value), 1)
 
+    # UI updates need to be scheduled using the Clock function, so these are separated into their own callback.
     def unlock_update(self, value, dt):
         self.padlock.source = unlocked_padlock
         self.text.text = self.output_file_path
         self.padlock.size_hint = (0.25, 0.25)
         self.add_widget(self.button)
 
+    # callback attached to the 'Open File' button.
     def open_file(self, instance,):
         os.startfile(self.output_file_path)
-
-    def reset_ui(self):
-        self.padlock.source = 'locked-padlock.png'
-
 
 class PdfUnlockApp(App):
     def build(self):
