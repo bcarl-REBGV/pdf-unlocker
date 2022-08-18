@@ -16,6 +16,7 @@ jobs:
           pip install pipenv
           pipenv shell
           pipenv install
+          $env:KIVY_GL_BACKEND="angle_sdl2"
           pipenv run build
       - uses: softprops/action-gh-release@v1
         with:
