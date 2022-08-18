@@ -26,7 +26,6 @@ a = Analysis(
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
-    Tree('./.venv/Lib'),
     *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],
     pyz,
     a.scripts,
