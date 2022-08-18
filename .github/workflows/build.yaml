@@ -6,16 +6,17 @@ on:
 jobs:
   build:
     name: 'Build'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'windows-latest'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
         with:
           python-version: 3.10.5
-      - run: pip install pipenv
-      - run: pipenv shell
-      - run: pipenv install
-      - run: pipenv run build
+      - run: |
+          pip install pipenv
+          pipenv shell
+          pipenv install
+          pipenv run build
       - uses: softprops/action-gh-release@v1
         with:
           files: PDF Unlocker.exe

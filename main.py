@@ -19,6 +19,7 @@ from functools import partial
 import sys
 from kivy.resources import resource_add_path, resource_find
 
+os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
 Config.set('graphics', 'width', '300')
 Config.set('graphics', 'height', '300')
 
