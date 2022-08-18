@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: 'Build'
-    runs-on: 'windows-latest'
+    runs-on: 'windows-2019'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
@@ -20,5 +20,5 @@ jobs:
           pipenv run build
       - uses: softprops/action-gh-release@v1
         with:
-          files: 'dist/PDF Unlocker.exe'
+          files: 'dist/PDFUnlocker.exe'
           body_path: release_notes.md
