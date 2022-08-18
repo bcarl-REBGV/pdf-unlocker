@@ -16,7 +16,7 @@ jobs:
       - run: pipenv shell
       - run: pipenv install
       - run: pipenv run build
-      - uses: softprops/action-gh-release
+      - uses: softprops/action-gh-release@v1
         with:
           files: PDF Unlocker.exe
           body_path: release_notes.md
