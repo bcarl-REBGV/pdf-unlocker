@@ -95,6 +95,7 @@ class RootWidget(FloatLayout):
 class PdfUnlockApp(App):
     def build(self):
         Window.size = (400, 400)
+        self.icon = '512.png'
         # Window.bind(on_drop_file=self._on_drop_file)
         Window.minimum_width, Window.minimum_height = (400, 200)
         return RootWidget()

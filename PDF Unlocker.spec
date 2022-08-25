@@ -9,7 +9,13 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas = [('./assets/locked-padlock.png', './assets'), ('./assets/unlocked-padlock.png', './assets'), ('./assets/spinner.gif', './assets')],
+    datas = [
+     ('./assets/locked-padlock.png', './assets'),
+     ('./assets/unlocked-padlock.png', './assets'),
+     ('./assets/spinner.gif', './assets'), 
+     ('./assets/icon.ico', './assets'), 
+     ('./assets/512.png', './assets')
+     ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -25,6 +31,7 @@ a = Analysis(
 
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
+
 exe = EXE(
     *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],
     pyz,
@@ -32,7 +39,6 @@ exe = EXE(
     a.binaries,
     a.zipfiles,
     a.datas,
-    [],
     name='PDFUnlocker',
     debug=False,
     bootloader_ignore_signals=False,
@@ -46,4 +52,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='assets/icon.ico'
 )
