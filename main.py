@@ -2,22 +2,19 @@ import os
 from threading import Thread
 from kivy.app import App
 from kivy.graphics import Color, Rectangle
-from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
-from kivy.lang.builder import Builder
 from kivy.core.window import Window
 from kivy.config import Config
 from kivy.clock import Clock
-from kivy.animation import Animation
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty
 from flattenPdf import unlockPdf
 from functools import partial
 import sys
-from kivy.resources import resource_add_path, resource_find
+from kivy.resources import resource_add_path
 
 os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
 Config.set('graphics', 'width', '300')
@@ -70,7 +67,7 @@ class RootWidget(FloatLayout):
         output.value = ""
         output.bind(value=self.unlock_finished)
         # call to unlockPdf is done in a separate thread to prevent the GUI from freezing
-        thread = Thread(target=self.dispatch_unlock, args=(file_path, output)) 
+        thread = Thread(target=self.dispatch_unlock, args=(file_path, output))
         thread.start()
 
     def dispatch_unlock(self, file_path, output):
@@ -92,11 +89,11 @@ class RootWidget(FloatLayout):
     def open_file(self, instance,):
         os.startfile(self.output_file_path)
 
+
 class PdfUnlockApp(App):
     def build(self):
         Window.size = (400, 400)
         self.icon = '512.png'
-        # Window.bind(on_drop_file=self._on_drop_file)
         Window.minimum_width, Window.minimum_height = (400, 200)
         return RootWidget()
 

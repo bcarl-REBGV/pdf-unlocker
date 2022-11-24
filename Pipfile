@@ -1,5 +1,5 @@
 [scripts]
-build = "pyinstaller 'PDF Unlocker.spec'"
+build = "pyinstaller 'main.spec'"
 dev = "py -m main"
 
 [packages]
@@ -31,3 +31,6 @@ requests = "==2.28.1"
 urllib3 = "==1.26.10"
 virtualenv = "==20.16.2"
 virtualenv-clone = "==0.5.7"
+
+[dev-packages]
+autopep8 = "*"
