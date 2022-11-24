@@ -26,11 +26,8 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
-
 # a.datas += Tree('./assets', prefix="dir_to_include")
-
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
-
 
 exe = EXE(
     *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],

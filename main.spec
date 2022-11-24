@@ -8,7 +8,7 @@ block_cipher = None
 a = Analysis(
     ['main.py'],
     pathex=[],
-    binaries=[(".\\gswin64c.exe", ".")],
+    binaries=[("./bin/gswin64c.exe", "./bin")],
     datas = [
      ('./assets/locked-padlock.png', './assets'),
      ('./assets/unlocked-padlock.png', './assets'),
@@ -22,7 +22,7 @@ a = Analysis(
     runtime_hooks=[],
     excludes=[],
     win_no_prefer_redirects=False,
-    win_private_assemblies=True,
+    win_private_assemblies=False,
     cipher=block_cipher,
     noarchive=False,
 )
@@ -32,12 +32,16 @@ exe = EXE(
     *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],
     pyz,
     a.scripts,
-    exclude_binaries=True,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     name='PDFUnlocker',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
     console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
@@ -45,14 +49,4 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon='assets/icon.ico'
-)
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='PDFUnlocker',
 )
