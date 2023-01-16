@@ -1,6 +1,4 @@
-*.pdf
-.vscode/
-__pycache__/
-.venv/
-build/
-dist/
+.idea
+obj
+*/obj
+*/bin

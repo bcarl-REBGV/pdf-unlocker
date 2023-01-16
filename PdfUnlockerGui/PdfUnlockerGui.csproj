@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Resource\icon.ico" />
+      <Resource Include="Resources\icon.ico" />
+      <None Remove="Resource\locked-padlock.png" />
+      <Resource Include="Resources\locked-padlock.png" />
+      <None Remove="Resource\padlock_512.png" />
+      <Resource Include="Resources\padlock_512.png" />
+      <None Remove="Resource\unlocked-padlock.png" />
+      <Resource Include="Resources\unlocked-padlock.png" />
+      <None Remove="Resources\spinner.gif" />
+      <Resource Include="Resources\spinner.gif" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PdfHandler\PdfHandler.csproj" />
+    </ItemGroup>
+
+</Project>
