@@ -6,7 +6,7 @@ namespace PdfHandler
     {
         public static Task<Uri?> UnlockPdf(Uri pathToFile)
         {
-            TaskCompletionSource<Uri?> tsc = new TaskCompletionSource<Uri?>();
+            TaskCompletionSource<Uri?> completionSource = new TaskCompletionSource<Uri?>();
 
             if (pathToFile.Segments.Length < 1) throw new ArgumentException("Invalid file path");
             string outputFilename = "(Unlocked) " + pathToFile.Segments[^1];
@@ -40,14 +40,14 @@ namespace PdfHandler
                 if (gsProcess.ExitCode != 0)
                 {
                     gsProcess.Dispose();
-                    tsc.SetResult(null);
+                    completionSource.SetResult(null);
                     throw new ApplicationException("Ghostscript process failed!");
                 }
-                tsc.SetResult(new Uri(outputPath));
+                completionSource.SetResult(new Uri(outputPath));
                 gsProcess.Dispose();
             };
             gsProcess.Start();
-            return tsc.Task;
+            return completionSource.Task;
         }
 }
 
