@@ -14,7 +14,11 @@
         Title="Pdf Unlocker" Height="400" Width="400">
     <Border BorderThickness="{Binding DropBorderThickness}" BorderBrush="{Binding DropBorderBrush}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image x:Name="StatusImage" Width="100" Height="100" Source="{Binding ImageSource}"/>
+            <Image x:Name="StatusImage" Width="100" Height="100" RenderTransformOrigin="0.5, 0.5" Source="{Binding ImageSource}">
+                <Image.RenderTransform>
+                    <RotateTransform x:Name="ImageAnimatedTransform" Angle="0"></RotateTransform>
+                </Image.RenderTransform>
+            </Image>
             <TextBlock TextWrapping="Wrap" Margin="20" Visibility="{Binding MessageVisibility}" Text="{Binding Message}"></TextBlock>
             <TextBlock x:Name="UnlockedFileLink" Visibility="{Binding LinkVisibility}" Margin="20">
                 <Hyperlink Click="Hyperlink_OnClick" TextDecorations="None"><TextBlock TextDecorations="Underline" TextWrapping="Wrap" Text="{Binding UnlockedFileLocation}"/></Hyperlink>
