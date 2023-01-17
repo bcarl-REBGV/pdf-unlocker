@@ -8,6 +8,7 @@
         <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <AssemblyName>PdfUnlocker</AssemblyName>
+        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

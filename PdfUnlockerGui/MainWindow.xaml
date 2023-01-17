@@ -17,7 +17,7 @@
             <Image x:Name="StatusImage" Width="100" Height="100" Source="{Binding ImageSource}"/>
             <TextBlock TextWrapping="Wrap" Margin="20" Visibility="{Binding MessageVisibility}" Text="{Binding Message}"></TextBlock>
             <TextBlock x:Name="UnlockedFileLink" Visibility="{Binding LinkVisibility}" Margin="20">
-                <Hyperlink Click="Hyperlink_OnClick"><TextBlock TextWrapping="Wrap" Text="{Binding UnlockedFileLocation}"/></Hyperlink>
+                <Hyperlink Click="Hyperlink_OnClick" TextDecorations="None"><TextBlock TextDecorations="Underline" TextWrapping="Wrap" Text="{Binding UnlockedFileLocation}"/></Hyperlink>
             </TextBlock>
             <Button Width="80" Visibility="{Binding ButtonIsVisible}" Click="ButtonBase_OnClick">Open File</Button>
         </StackPanel>

@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace PdfHandler
 {
@@ -10,7 +13,7 @@ namespace PdfHandler
 
             if (pathToFile.Segments.Length < 1) throw new ArgumentException("Invalid file path");
             string outputFilename = "(Unlocked) " + pathToFile.Segments[^1];
-            string outputPath = string.Concat(pathToFile.Segments[1..^1]) + outputFilename;
+            string outputPath = Uri.UnescapeDataString(string.Concat(pathToFile.Segments[1..^1]) + outputFilename);
             string inputPath = pathToFile.LocalPath;
 
             string WrapWithQuotes(string input) => "\"" + input + "\"";
@@ -26,7 +29,7 @@ namespace PdfHandler
                 { WrapWithQuotes(inputPath), "" }
             };
 
-            if (!File.Exists(pathToFile.AbsolutePath)) throw new ArgumentException("Invalid file path");
+            if (!File.Exists(Uri.UnescapeDataString(pathToFile.AbsolutePath))) throw new ArgumentException("Invalid file path");
 
             ProcessStartInfo gsInfo = new ProcessStartInfo( "gswin64c.exe", argDict.ToString())
             {
@@ -35,7 +38,7 @@ namespace PdfHandler
             Process gsProcess = new Process { StartInfo = gsInfo };
             gsProcess.EnableRaisingEvents = true;
 
-            gsProcess.Exited += (_,_) =>
+            gsProcess.Exited += (sender, e) =>
             {
                 if (gsProcess.ExitCode != 0)
                 {

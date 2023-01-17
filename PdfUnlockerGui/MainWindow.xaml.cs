@@ -27,7 +27,7 @@ namespace PdfUnlockerGui
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             if (_data is null) return;
-            ProcessStartInfo startInfo = new(_data.UnlockedFileLocation) { UseShellExecute = true };
+            ProcessStartInfo startInfo = new ProcessStartInfo(_data.UnlockedFileLocation) { UseShellExecute = true };
             Process.Start(startInfo);
         }
 
@@ -41,7 +41,7 @@ namespace PdfUnlockerGui
             Uri firstFileName = new Uri(fileName);
 
             Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(firstFileName);
-            _data.Message = $"Unlocking pdf: {firstFileName.Segments[^1]}";
+            _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(firstFileName.Segments[^1])}";
             _data.ImageSource = new BitmapImage(new Uri("/Resources/spinner.gif", UriKind.Relative));
             HandlePdfTaskComplete(unlockTask);
             e.Handled = true;
@@ -60,6 +60,12 @@ namespace PdfUnlockerGui
             e.Handled = true;
         }
 
+        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_data is null) return;
+            Process.Start(new ProcessStartInfo("explorer", "/select," +  _data.UnlockedFileLocation));
+        }
+        
         private static bool TryGetDroppedPdfFile(DragEventArgs e, out string fileName )
         {
             fileName = string.Empty;
@@ -69,7 +75,6 @@ namespace PdfUnlockerGui
             fileName = dataText[0];
             return true;
         }
-
 
         private async void HandlePdfTaskComplete(Task<Uri?> task)
         {
@@ -99,15 +104,11 @@ namespace PdfUnlockerGui
         {
             if (_data is null) return;
             _data.MessageVisibility = Visibility.Visible;
+            _data.Message = _data.DefaultMessage;
             _data.LinkVisibility = Visibility.Collapsed;
             _data.ImageSource = new BitmapImage(new Uri("/Resources/locked-padlock.png", UriKind.Relative));
             _data.ButtonIsVisible = Visibility.Hidden;
         }
 
-        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (_data is null) return;
-            Process.Start(new ProcessStartInfo("explorer", "/select," +  _data.UnlockedFileLocation));
-        }
     }
 }

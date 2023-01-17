@@ -1,4 +1,6 @@
-﻿namespace PdfHandler
+﻿using System.Collections.Generic;
+
+namespace PdfHandler
 {
     /// <summary>
     /// Represents a list of command line arguments in a dictionary format.
