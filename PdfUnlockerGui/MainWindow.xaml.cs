@@ -39,18 +39,28 @@ namespace PdfUnlockerGui
         private void MainWindow_OnDrop(object sender, DragEventArgs e)
         {
             if (_data is null) return;
-            if (!TryGetDroppedPdfFile(e, out string fileName)) return;
-
-            if (new FileInfo(fileName).Extension != ".pdf") return;
+            if (!TryGetDroppedPdfFile(e, out string fileName))
+            {
+                _data.Message = "Cannot parse dropped data.";
+                return;
+            }
 
             Uri firstFileName = new Uri(fileName);
 
-            Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(firstFileName);
-            _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(firstFileName.Segments[^1])}";
-            _data.ImageSource = new BitmapImage(new Uri("/Resources/spinner.gif", UriKind.Relative));
-            StartRotateAnim(_imageTransform);
+            try
+            {
+                Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(firstFileName);
+                _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(firstFileName.Segments[^1])}";
+                _data.ImageSource = new BitmapImage(new Uri("/Resources/spinner.gif", UriKind.Relative));
+                StartRotateAnim(_imageTransform);
 
-            HandlePdfTaskComplete(unlockTask);
+                HandlePdfTaskComplete(unlockTask);
+            }
+            catch (Exception err)
+            {
+                _data.Message = err.Message;
+            }
+
             e.Handled = true;
         }
 
@@ -76,7 +86,7 @@ namespace PdfUnlockerGui
 
         private void StartRotateAnim(RotateTransform? transform)
         {
-            if (transform == null) return;
+            if (transform is null) return;
             DoubleAnimation anim = new DoubleAnimation(0, 360, new Duration(TimeSpan.FromSeconds(2)));
             anim.RepeatBehavior = RepeatBehavior.Forever;
             transform.BeginAnimation(RotateTransform.AngleProperty, anim);
@@ -84,7 +94,7 @@ namespace PdfUnlockerGui
 
         private void EndRotateAnim(RotateTransform? transform)
         {
-            if (transform == null) return;
+            if (transform is null) return;
             transform.BeginAnimation(RotateTransform.AngleProperty, null);
         }
 
@@ -129,7 +139,7 @@ namespace PdfUnlockerGui
         {
             if (_data is null) return;
             _data.MessageVisibility = Visibility.Visible;
-            _data.Message = _data.DefaultMessage;
+            _data.Message = "GS failed to parse input file.";
             _data.LinkVisibility = Visibility.Collapsed;
             _data.ImageSource = new BitmapImage(new Uri("/Resources/locked-padlock.png", UriKind.Relative));
             _data.ButtonIsVisible = Visibility.Hidden;
