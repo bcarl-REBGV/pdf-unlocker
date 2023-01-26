@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PdfUnlockerGui"
+        xmlns:views="clr-namespace:PdfUnlockerGui.Views"
         mc:Ignorable="d"
         AllowDrop="True"
         ResizeMode="NoResize"
         Drop="MainWindow_OnDrop"
         DragEnter="MainWindow_OnDragEnterOver"
         DragOver="MainWindow_OnDragEnterOver"
-        d:DataContext="{d:DesignInstance local:GuiData, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=True}"
         Title="Pdf Unlocker" Height="400" Width="400">
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Name="Container">
         <Image x:Name="StatusImage" Width="100" Height="100" RenderTransformOrigin="0.5, 0.5"

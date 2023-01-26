@@ -8,7 +8,7 @@ namespace PdfUnlockerGui
     /// <summary>
     /// DataContext for MainWindow.xaml controls
     /// </summary>
-    internal sealed class GuiData : DataBindingObject
+    internal sealed class MainWindowViewModel : DataBindingObject
     {
 
         public string DefaultMessage => "Drag and drop PDF files here";

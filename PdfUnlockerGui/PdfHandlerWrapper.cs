@@ -13,8 +13,16 @@ namespace PdfUnlockerGui
     {
         public static Task<Uri?> UnlockPdf(Uri pathToFile)
         {
-            Task<Uri?> task = GhostscriptRunner.UnlockPdf(pathToFile);
-            return task;
+            try
+            {
+                Task<Uri?> task = GhostscriptRunner.UnlockPdf(pathToFile);
+                return task;
+            }
+            catch (Exception e)
+            {
+                ExceptionHandling.GlobalExceptionHandler(new object() , e);
+                return new Task<Uri?>(() => null);
+            }
         }
     }
 }

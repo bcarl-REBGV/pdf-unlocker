@@ -10,7 +10,7 @@ namespace PdfHandler
         public static Task<Uri?> UnlockPdf(Uri pathToFile)
         {
             TaskCompletionSource<Uri?> completionSource = new TaskCompletionSource<Uri?>();
-
+            
             if (pathToFile.Segments.Length < 1) throw new ArgumentException("Invalid file path");
             string outputFilename = "(Unlocked) " + pathToFile.Segments[^1];
             string outputPath = Uri.UnescapeDataString(string.Concat(pathToFile.Segments[1..^1]) + outputFilename);

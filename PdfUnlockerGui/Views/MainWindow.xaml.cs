@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace PdfUnlockerGui
 {
@@ -18,14 +19,14 @@ namespace PdfUnlockerGui
     public partial class MainWindow
 
     {
-        private readonly GuiData? _data;
+        private readonly MainWindowViewModel? _data;
         private readonly RotateTransform? _imageTransform;
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new GuiData();
-            _data = this.DataContext as GuiData;
+            DataContext = new MainWindowViewModel();
+            _data = this.DataContext as MainWindowViewModel;
             _imageTransform = FindName("ImageAnimatedTransform") as RotateTransform;
         }
 
@@ -41,8 +42,7 @@ namespace PdfUnlockerGui
             if (_data is null) return;
             if (!TryGetDroppedPdfFile(e, out string fileName))
             {
-                _data.Message = "Cannot parse dropped data.";
-                return;
+                throw new Exception("Invalid file was dropped.");
             }
 
             Uri firstFileName = new Uri(fileName);
@@ -56,10 +56,11 @@ namespace PdfUnlockerGui
 
                 HandlePdfTaskComplete(unlockTask);
             }
-            catch (Exception err)
+            catch (Exception error)
             {
-                _data.Message = err.Message;
+                throw;
             }
+
 
             e.Handled = true;
         }
@@ -110,7 +111,7 @@ namespace PdfUnlockerGui
 
         private async void HandlePdfTaskComplete(Task<Uri?> task)
         {
-            if (_data is null) return;
+            if (_data is null) throw new Exception("DataContext _data is null");
 
             Uri? newMessage = await task;
             if (newMessage is null)
@@ -139,7 +140,7 @@ namespace PdfUnlockerGui
         {
             if (_data is null) return;
             _data.MessageVisibility = Visibility.Visible;
-            _data.Message = "GS failed to parse input file.";
+            _data.Message = _data.DefaultMessage;
             _data.LinkVisibility = Visibility.Collapsed;
             _data.ImageSource = new BitmapImage(new Uri("/Resources/locked-padlock.png", UriKind.Relative));
             _data.ButtonIsVisible = Visibility.Hidden;

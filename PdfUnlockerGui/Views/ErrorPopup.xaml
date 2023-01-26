@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="PdfUnlockerGui.Views.ErrorPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PdfUnlockerGui.Views"
+             mc:Ignorable="d"
+             x:Name="PopupRoot"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid DataContext="{Binding ElementName=PopupRoot}">
+        <TextBlock Text="{Binding Value}"></TextBlock>
+    </Grid>
+</UserControl>
