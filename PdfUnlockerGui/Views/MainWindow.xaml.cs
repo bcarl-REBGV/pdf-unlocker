@@ -47,20 +47,12 @@ namespace PdfUnlockerGui
 
             Uri firstFileName = new Uri(fileName);
 
-            try
-            {
-                Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(firstFileName);
-                _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(firstFileName.Segments[^1])}";
-                _data.ImageSource = new BitmapImage(new Uri("/Resources/spinner.gif", UriKind.Relative));
-                StartRotateAnim(_imageTransform);
+            Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(firstFileName);
+            _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(firstFileName.Segments[^1])}";
+            _data.ImageSource = new BitmapImage(new Uri("/Resources/spinner.gif", UriKind.Relative));
+            StartRotateAnim(_imageTransform);
 
-                HandlePdfTaskComplete(unlockTask);
-            }
-            catch (Exception error)
-            {
-                throw;
-            }
-
+            HandlePdfTaskComplete(unlockTask);
 
             e.Handled = true;
         }
