@@ -11,7 +11,7 @@ namespace PdfUnlockerGui
     /// </summary>
     internal static class PdfHandlerWrapper
     {
-        public static Task<Uri?> UnlockPdf(Uri pathToFile)
+        public static Task<Uri?> UnlockPdf(Uri pathToFile, Action cleanupFunction)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace PdfUnlockerGui
             }
             catch (Exception e)
             {
-                ExceptionHandling.GlobalExceptionHandler(new object() , e);
+                ExceptionHandling.GlobalExceptionHandler(new object() , e, cleanupFunction );
                 return new Task<Uri?>(() => null);
             }
         }

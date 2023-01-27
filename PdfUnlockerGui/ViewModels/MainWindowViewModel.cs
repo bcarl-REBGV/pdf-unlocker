@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -59,6 +60,13 @@ namespace PdfUnlockerGui
         {
             get => _unlockedFileLocation;
             set => RaiseAndSet(ref _unlockedFileLocation, value);
+        }
+
+        private List<string> _unlockedFileLocations = new List<string>();
+        public List<string> UnlockedFileLocations
+        {
+            get => _unlockedFileLocations;
+            set => RaiseAndSet(ref _unlockedFileLocations, value);
         }
 
         private Visibility _messageVisibility = Visibility.Visible;

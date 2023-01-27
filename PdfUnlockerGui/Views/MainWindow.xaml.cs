@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +24,8 @@ namespace PdfUnlockerGui
         private readonly MainWindowViewModel? _data;
         private readonly RotateTransform? _imageTransform;
 
+        public Action CleanupFunction => UpdateUiOnError;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,33 +37,54 @@ namespace PdfUnlockerGui
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             if (_data is null) return;
-            ProcessStartInfo startInfo = new ProcessStartInfo(_data.UnlockedFileLocation) { UseShellExecute = true };
-            Process.Start(startInfo);
+            foreach (string path in _data.UnlockedFileLocations)
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(path)
+                    { UseShellExecute = true };
+                Process.Start(startInfo);
+            }
         }
 
         private void MainWindow_OnDrop(object sender, DragEventArgs e)
         {
             if (_data is null) return;
-            if (!TryGetDroppedPdfFile(e, out string fileName))
+            if (!TryGetDroppedPdfFiles(e, out string[] fileNames))
             {
                 throw new Exception("Invalid file was dropped.");
             }
 
-            Uri firstFileName = new Uri(fileName);
+            _data.LinkVisibility = Visibility.Collapsed;
 
-            Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(firstFileName);
-            _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(firstFileName.Segments[^1])}";
+            Uri[] fileNameUris = fileNames.Select((s) => new Uri(s)).ToArray();
             _data.ImageSource = new BitmapImage(new Uri("/Resources/spinner.gif", UriKind.Relative));
+
             StartRotateAnim(_imageTransform);
 
-            HandlePdfTaskComplete(unlockTask);
+            _data.UnlockedFileLocations = new List<string>();
+            if (fileNameUris.Length > 1)
+            {
+                _data.Message = "Unlocking multiple files";
+            }
+            else
+            {
+                _data.Message = $"Unlocking pdf: {Uri.UnescapeDataString(fileNameUris[0].Segments[^1])}";
+            }
+
+            for (int index = 0; index < fileNameUris.Length; index++)
+            {
+                Uri file = fileNameUris[index];
+                Task<Uri?> unlockTask = PdfHandlerWrapper.UnlockPdf(file, CleanupFunction);
+
+
+                HandlePdfTaskComplete(unlockTask, index == fileNameUris.Length - 1);
+            }
 
             e.Handled = true;
         }
 
         private void MainWindow_OnDragEnterOver(object sender, DragEventArgs e)
         {
-            if (!TryGetDroppedPdfFile(e, out string fileName))
+            if (!TryGetDroppedPdfFiles(e, out string[] fileNames))
             {
                 e.Effects = DragDropEffects.None;
             }
@@ -101,7 +126,23 @@ namespace PdfUnlockerGui
             return true;
         }
 
-        private async void HandlePdfTaskComplete(Task<Uri?> task)
+        private static bool TryGetDroppedPdfFiles(DragEventArgs e, out string[] fileNames)
+        {
+            fileNames = new string[] { };
+            string[]? dataText = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (dataText is null) return false;
+            IEnumerable<string> filteredData = dataText.Where((String s) =>
+            {
+                return new FileInfo(s).Extension == ".pdf";
+            });
+
+            fileNames = filteredData.ToArray();
+
+            if (fileNames.Length == 0) return false;
+            return true;
+        }
+
+        private async void HandlePdfTaskComplete(Task<Uri?> task, bool finalFile = true)
         {
             if (_data is null) throw new Exception("DataContext _data is null");
 
@@ -112,18 +153,31 @@ namespace PdfUnlockerGui
             }
             else
             {
-                UpdateUiOnSuccess(newMessage);
+                _data.UnlockedFileLocations.Add(newMessage.LocalPath);
             }
 
-            EndRotateAnim(_imageTransform);
+            if (finalFile)
+            {
+                UpdateUiOnSuccess();
+                EndRotateAnim(_imageTransform);
+            }
         }
 
-        private void UpdateUiOnSuccess(Uri newMessage)
+        private void UpdateUiOnSuccess()
         {
             if (_data is null) return;
-            _data.MessageVisibility = Visibility.Collapsed;
-            _data.LinkVisibility = Visibility.Visible;
-            _data.UnlockedFileLocation = newMessage.LocalPath;
+            if (_data.UnlockedFileLocations.Count > 1)
+            {
+                _data.MessageVisibility = Visibility.Visible;
+                _data.Message = "Multiple files unlocked...";
+            }
+            else
+            {
+                _data.MessageVisibility = Visibility.Collapsed;
+                _data.UnlockedFileLocation = _data.UnlockedFileLocations[0];
+                _data.LinkVisibility = Visibility.Visible;
+            }
+
             _data.ImageSource = new BitmapImage(new Uri("/Resources/unlocked-padlock.png", UriKind.Relative));
             _data.ButtonIsVisible = Visibility.Visible;
         }

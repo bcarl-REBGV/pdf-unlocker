@@ -28,6 +28,6 @@
                 <TextBlock TextDecorations="Underline" TextWrapping="Wrap" Text="{Binding UnlockedFileLocation}" />
             </Hyperlink>
         </TextBlock>
-        <Button Width="80" Visibility="{Binding ButtonIsVisible}" Click="ButtonBase_OnClick">Open File</Button>
+        <Button Width="80" Visibility="{Binding ButtonIsVisible}" Click="ButtonBase_OnClick">Open File(s)</Button>
     </StackPanel>
 </Window>

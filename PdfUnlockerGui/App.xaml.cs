@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace PdfUnlockerGui
@@ -10,7 +11,8 @@ namespace PdfUnlockerGui
     {
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            ExceptionHandling.GlobalExceptionHandler(sender, e.Exception);
+            Action cleanupFunction = (MainWindow as MainWindow)?.CleanupFunction ?? delegate {  };
+            ExceptionHandling.GlobalExceptionHandler(sender, e.Exception, cleanupFunction);
             e.Handled = true;
         }
     }
