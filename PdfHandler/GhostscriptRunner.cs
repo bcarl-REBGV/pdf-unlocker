@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace PdfHandler
@@ -31,7 +32,9 @@ namespace PdfHandler
 
             if (!File.Exists(Uri.UnescapeDataString(pathToFile.AbsolutePath))) throw new ArgumentException("Invalid file path");
 
-            ProcessStartInfo gsInfo = new ProcessStartInfo( "gswin64c.exe", argDict.ToString())
+            var cwd = AppContext.BaseDirectory;
+
+            ProcessStartInfo gsInfo = new ProcessStartInfo( $"{cwd}\\gswin64c.exe", argDict.ToString())
             {
                 CreateNoWindow = true
             };
@@ -42,6 +45,8 @@ namespace PdfHandler
             {
                 if (gsProcess.ExitCode != 0)
                 {
+                    var code = gsProcess.ExitCode;
+                    Trace.WriteLine(code);
                     gsProcess.Dispose();
                     completionSource.SetResult(null);
                     throw new ApplicationException("Ghostscript process failed!");

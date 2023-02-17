@@ -7,9 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Resource Include="gswin64c.exe">
+      <EmbeddedResource Include="gswin64c.exe">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
+      </EmbeddedResource>
+      <None Remove="gsdll64.lib" />
+      <EmbeddedResource Include="gsdll64.lib">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="gsdll64.dll" />
+      <EmbeddedResource Include="gsdll64.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
